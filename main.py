@@ -5,9 +5,9 @@ LOWER_K = 0
 UPPER_K = 10 #TODO This should be equal to samples in data
 
 #TODO Try Catch Statement
-def main(data, k):
+def main(runsheet, k):
     validate_k(k)
-    validate_data(data)
+    validate_data(runsheet)
     #Validate Data
 
 # Validate Data
@@ -18,9 +18,12 @@ def validate_k(k):
     if not (LOWER_K < k <= UPPER_K):
         raise ValueError(f'Invalid k: must be between {LOWER_K} and {UPPER_K}. k = ({k})')
 
-def validate_data(data):
+#TODO Rename
+def validate_runsheet(runsheet):
     print("Not Implemented Yet")
     #Right Format
     #Find Long and Lat per entry
+
+def 
 
 main(5,5)
