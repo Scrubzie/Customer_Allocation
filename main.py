@@ -1,13 +1,19 @@
+import numpy as np
+import pandas as pd
+
 #TODO Input Validation
 #TODO Proper Params
+
+RUNSHEET = ["Woolworths","Coles","Spud Shed"]
 
 LOWER_K = 0
 UPPER_K = 10 #TODO This should be equal to samples in data
 
 #TODO Try Catch Statement
 def main(runsheet, k):
+    customer_array = validate_runsheet(runsheet)
+
     validate_k(k)
-    validate_data(runsheet)
     #Validate Data
 
 # Validate Data
@@ -21,9 +27,18 @@ def validate_k(k):
 #TODO Rename
 def validate_runsheet(runsheet):
     print("Not Implemented Yet")
-    #Right Format
-    #Find Long and Lat per entry
+    print(type(runsheet))
+    return np.array(runsheet)
+    # Right Format
+    # Find Long and Lat per entry
 
-def 
+main(RUNSHEET,5)
 
-main(5,5)
+mydataset = {
+  'cars': ["BMW", "Volvo", "Ford"],
+  'passings': [3, 7, 2]
+}
+
+myvar = pd.DataFrame(mydataset)
+
+print(myvar)
