@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from validation import *
 
 #TODO Input Validation
 #TODO Proper Params
@@ -16,9 +17,10 @@ runsheet = pd.DataFrame(mydataset)
 
 #TODO Try Catch Statement
 def main(runsheet, k):
-    validate_runsheet(runsheet)
+    #validate_runsheet(runsheet)
 
-    validate_k(k)
+    #validate_k(k)
+    validate_inputs()
     #Validate Data
 
 # Validate Data
@@ -26,7 +28,7 @@ def main(runsheet, k):
 def validate_k(k):
     if not isinstance(k,int):
         raise TypeError(f'Invalid k: must be an int. k is a {type(k)}')
-    if not (LOWER_K < k <= UPPER_K):
+    if not LOWER_K < k <= UPPER_K:
         raise ValueError(f'Invalid k: must be between {LOWER_K} and {UPPER_K}. k = ({k})')
 
 #TODO Rename
