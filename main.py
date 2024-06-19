@@ -4,12 +4,13 @@ from validation import *
 
 #TODO Input Validation
 #TODO Proper Params
+#TODO Stub method for webapp format to pandas dataframe
 
 LOWER_K = 0
 UPPER_K = 10 #TODO This should be equal to samples in data
 
 mydataset = {
-  'ID': [1, np.nan, 3],
+  'ID': [1, 2, 3],
   'Customer': ["Woolworths Riverton", "Coles Karawara", "Spud Shed Jandakot"]
 }
 
@@ -20,7 +21,7 @@ def main(runsheet, k):
     #validate_runsheet(runsheet)
 
     #validate_k(k)
-    validate_inputs()
+    validate_inputs(runsheet,2)
     #Validate Data
 
 # Validate Data
@@ -41,6 +42,7 @@ def validate_k(k):
 # Exists in Db
 # Return a k-means ready distance matrix
 # Need to keep track of which long/lat is for which entry (index-based)
+"""
 def validate_runsheet(runsheet):
     if runsheet.isnull().values.any():
         print("Null")
@@ -50,8 +52,5 @@ def validate_runsheet(runsheet):
     print(runsheet.shape[1]) # Columns
     # Right Format
     # Find Long and Lat per entry
-
-def __validate_runsheet_ID():
-    print("Not Implemented Yet")
-
+"""
 main(runsheet,5)
