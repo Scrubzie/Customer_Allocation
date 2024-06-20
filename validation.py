@@ -9,21 +9,7 @@ def validate_inputs(runsheet, k):
     __validate_k(k,total_customers)
     print()
 
-#NOTE Done
-def __validate_k(k, total_customers):
-    """Verify that k is a valid value
 
-    :param int k: The person sending the message
-    :param int total_customers: The recipient of the message
-    :raises TypeError: If k is not an int
-    :raises ValueError: If k is not between (and including) 1 and total_customers
-    """
-    print(k, total_customers)
-    if not isinstance(k, int):
-        raise TypeError(f'k must be in an int. k = {type(k)}')
-    if not 1 <= k <= total_customers:
-        raise ValueError(f'k must be greater than 1 and less than total customers.'
-                         f'k = {k}, total_customers = {total_customers}')
 
 # Format Check
 # Null Check
@@ -39,8 +25,7 @@ def __validate_runsheet(runsheet):
 
 def __validate_runsheet_format(runsheet):
     if not isinstance(runsheet, pd.DataFrame):
-        # Raise Exception
-        print("A")
+        raise TypeError(f'runsheet must be in a dataframe. runsheet = {type(runsheet)}')
     if not runsheet.shape[0] > 0:       # Must have atleast one customer
         print("C")
     if runsheet.shape[1] != 2:      # Must have two columns
@@ -59,24 +44,18 @@ def __validate_runsheet_entries(runsheet):
         print("F")
     # For each entry in dataframe, verify existence in db
 
+#NOTE Done
+def __validate_k(k, total_customers):
+    """Verify that k is a valid value
 
-#########################
-#TODO Rename
-# Dimension Check <>
-# Label check? <>
-# Check for Null entries <>
-# Unique IDs <>
-# Duplicate Check <>
-# Format Check <>
-# Exists in Db <>
-# Return a k-means ready distance matrix
-# Need to keep track of which long/lat is for which entry (index-based)
-def validate_runsheet(runsheet):
-    if runsheet.isnull().values.any():
-        print("Null")
-    else:
-        print("No Nulls")
-    print(runsheet.shape[0]) # Rows
-    print(runsheet.shape[1]) # Columns
-    # Right Format
-    # Find Long and Lat per entry
+    :param int k: The person sending the message
+    :param int total_customers: The recipient of the message
+    :raises TypeError: If k is not an int
+    :raises ValueError: If k is not between (and including) 1 and total_customers
+    """
+    print(k, total_customers)
+    if not isinstance(k, int):
+        raise TypeError(f'k must be in an int. k = {type(k)}')
+    if not 1 <= k <= total_customers:
+        raise ValueError(f'k must be greater than 1 and less than total customers.'
+                         f'k = {k}, total_customers = {total_customers}')
