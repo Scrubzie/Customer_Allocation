@@ -3,7 +3,6 @@ import pandas as pd
 # runsheet is pandas dataframe
 # k is int
 def validate_inputs(runsheet, k):
-
     __validate_runsheet(runsheet)
     total_customers = runsheet.shape[0] # total_customer = no. of rows
     __validate_k(k,total_customers)
