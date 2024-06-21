@@ -20,7 +20,6 @@ def validate_inputs(runsheet, k):
 def __validate_runsheet(runsheet):
     __validate_runsheet_format(runsheet)
     __validate_runsheet_entries(runsheet)
-    # For each entry in dataframe, convert to 
 
 def __validate_runsheet_format(runsheet):
     if not isinstance(runsheet, pd.DataFrame):
@@ -41,10 +40,9 @@ def __validate_runsheet_entries(runsheet):
         print("E")
     if not runsheet['Customer'].is_unique:
         print("F")
-    #for index, row in runsheet.iterrows(): #TODO Verify performance impact, low priority
     for row in runsheet.itertuples(index=False):
         customer_id = row[0]
-        print(row[0])
+        print(customer_id)
         # SQL CODE HERE
         # For each entry in dataframe, verify existence in db
         # EXISTS(SELECT * from <Table> WHERE ID=<ID_variable>);
@@ -68,3 +66,4 @@ def __validate_k(k, total_customers):
     if not 1 <= k <= total_customers:
         raise ValueError(f'k must be greater than 1 and less than total customers.'
                          f'k = {k}, total_customers = {total_customers}')
+    

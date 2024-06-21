@@ -1,5 +1,5 @@
 import pandas as pd
-from validation import *
+from validation import validate_inputs
 
 #TODO Input Validation 
 #TODO Proper Params
@@ -14,10 +14,6 @@ runsheet = pd.DataFrame(mydataset)
 
 #TODO Try Catch Statement
 def main(runsheet, k):
-    #validate_runsheet(runsheet)
+    validate_inputs(runsheet,k)
 
-    #validate_k(k)
-    validate_inputs(runsheet,3)
-    #Validate Data
-
-main(runsheet,5)
+main(runsheet,2)
