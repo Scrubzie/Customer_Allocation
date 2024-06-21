@@ -42,7 +42,17 @@ def __validate_runsheet_entries(runsheet):
         print("E")
     if not runsheet['Customer'].is_unique:
         print("F")
-    # For each entry in dataframe, verify existence in db
+    #for index, row in runsheet.iterrows(): #TODO Verify performance impact, low priority
+    for row in runsheet.itertuples(index=False):
+        customer_id = row[0]
+        print(row[0])
+        # SQL CODE HERE
+        # For each entry in dataframe, verify existence in db
+        # EXISTS(SELECT * from <Table> WHERE ID=<ID_variable>);
+        # If doesn't exist, raise exception
+        # Else continue loop
+
+
 
 #NOTE Done
 def __validate_k(k, total_customers):

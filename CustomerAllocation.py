@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from validation import *
 
@@ -18,7 +17,7 @@ def main(runsheet, k):
     #validate_runsheet(runsheet)
 
     #validate_k(k)
-    validate_inputs(runsheet,4)
+    validate_inputs(runsheet,3)
     #Validate Data
 
 main(runsheet,5)
