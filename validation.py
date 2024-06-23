@@ -17,6 +17,7 @@ def validate_inputs(runsheet, k):
 # Unique IDs
 # Unique Customer Names, in theory, duplicates are handled?
 
+#NOTE DONE
 def __validate_runsheet_format(runsheet):
     """Verify the runsheet is in the correct format.
     The format must be a Pandas DataFrame with atleast 1 row and exactly 2 columns.
@@ -24,7 +25,7 @@ def __validate_runsheet_format(runsheet):
     :param pd.DataFrame runsheet: A runsheet containing IDs and customers
 
     :raises TypeError: If runsheet is not a Pandas dataframe
-    :raises ValueError: If runsheet does not contain atleast 1 row OR exactly 2 columns
+    :raises ValueError: If runsheet does not contain atleast 1 row or exactly 2 columns
     """
     if not isinstance(runsheet, pd.DataFrame):
         raise TypeError(f'runsheet must be in a dataframe.'
@@ -36,6 +37,7 @@ def __validate_runsheet_format(runsheet):
         raise ValueError(f'runsheet must contain exactly two columns.'
                          f'Runsheet has {runsheet.shape[1]} columns')
 
+#TODO SQL Code
 def __validate_runsheet_entries(runsheet):
     labels = runsheet.columns.values
     if runsheet.isnull().values.any():      # Null check

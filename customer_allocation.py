@@ -1,4 +1,6 @@
 import pandas as pd
+import pyodbc
+
 from validation import validate_inputs
 
 #TODO Input Validation 
@@ -12,12 +14,28 @@ mydataset = {
 
 runsheet = pd.DataFrame(mydataset)
 
+SERVER = 'EAGLE-PREMIERS'
+DATABASE = 'LocalQuantumTest'
+USERNAME = 'agam'
+PASSWORD = 'agam'
+
+connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
+
 #TODO Try Catch Statement
 def main(runsheet, k):
     validate_inputs(runsheet,k)
     runsheet_dictionary()
     geographic_array()
     geographic_to_cartesian()
+    cnxn = pyodbc.connect(connectionString)
+    cursor = cnxn.cursor()	
+    cursor.execute("SELECT * FROM Customer") 
+    row = cursor.fetchone() 
+    while row:
+        print (row) 
+        row = cursor.fetchone()
+    cursor.close()
+    cnxn.close()
     # Begin K-means
 
 
@@ -37,3 +55,4 @@ def runsheet_dictionary():
     print()
 
 main(runsheet,2)
+
