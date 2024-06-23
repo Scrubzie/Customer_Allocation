@@ -23,16 +23,16 @@ def __validate_runsheet_format(runsheet):
 
     :param pd.DataFrame runsheet: A runsheet containing IDs and customers
 
-    :raises TypeError: If k is not an int
-    :raises ValueError: If k is not between (and including) 1 and total_customers
+    :raises TypeError: If runsheet is not a Pandas dataframe
+    :raises ValueError: If runsheet does not contain atleast 1 row OR exactly 2 columns
     """
     if not isinstance(runsheet, pd.DataFrame):
         raise TypeError(f'runsheet must be in a dataframe.'
                         f'Runsheet = {type(runsheet)}')
-    if not runsheet.shape[0] > 0:       # Must have atleast one customer
+    if not runsheet.shape[0] > 0:
         raise ValueError(f'runsheet must contain atleast one customer.'
                          f'Runsheet has {runsheet.shape[0]} rows')
-    if runsheet.shape[1] != 2:      # Must have two columns
+    if runsheet.shape[1] != 2:
         raise ValueError(f'runsheet must contain exactly two columns.'
                          f'Runsheet has {runsheet.shape[1]} columns')
 
