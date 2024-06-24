@@ -2,6 +2,7 @@ import pandas as pd
 import pyodbc
 
 from validation import validate_inputs
+from database_connector import *
 
 #TODO Input Validation 
 #TODO Proper Params
@@ -27,6 +28,13 @@ def main(runsheet, k):
     runsheet_dictionary()
     geographic_array()
     geographic_to_cartesian()
+    dc = DatabaseConnector(connectionString)
+    cursor = dc.create_cursor()
+    cursor.execute("SELECT * FROM Customer")
+    row = cursor.fetchone() 
+    while row:
+        print (row) 
+        row = cursor.fetchone()
     # Begin K-means
 
 def example():
