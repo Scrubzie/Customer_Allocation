@@ -1,4 +1,17 @@
 import pandas as pd
+import os
+import pyodbc
+
+from database_connector import *
+
+SERVER = 'EAGLE-PREMIERS'
+DATABASE = 'LocalQuantumTest'
+USERNAME = 'agam'
+PASSWORD = 'agam'
+
+#connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
+connectionString = os.getenv('QuantumTestString')
+
 #Primary Function
 # runsheet is pandas dataframe
 # k is int
@@ -49,9 +62,20 @@ def __validate_runsheet_entries(runsheet):
         print("E")
     if not runsheet['Customer'].is_unique:
         print("F")
+    #Make a function
+    dc = DatabaseConnector()
     for row in runsheet.itertuples(index=False):
-        customer_id = row[0]
-        print(customer_id)
+        cursor = dc.create_cursor()
+        string = f'SELECT Top 1 * from Customer WHERE ID={row[0]}'
+        cursor.execute(string)
+        x = cursor.fetchone()
+        if x is None:
+            #Raise Exception
+            print()
+        dc.close_cursor(cursor)        
+
+        #customer_id = row[0]
+        #print(customer_id)
         
         # SQL CODE HERE
         # For each entry in dataframe, verify existence in db
