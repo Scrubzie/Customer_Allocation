@@ -6,11 +6,6 @@ class DatabaseConnector:
         self.connection_string = os.getenv('QuantumTestString')
         self.connection = pyodbc.connect(self.connection_string)
         self.cursors = []
-
-    def __del__(self):
-        for cursor in self.cursors:
-            cursor.close()
-        self.connection.close()
     
     def create_cursor(self):
         cursor = self.connection.cursor()
@@ -25,3 +20,7 @@ class DatabaseConnector:
     def close_all_cursors(self):
         for cursor in self.cursors:
             cursor.close()
+
+    def __del__(self):
+        self.close_all_cursors()
+        self.connection.close()

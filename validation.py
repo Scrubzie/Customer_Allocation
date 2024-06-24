@@ -1,34 +1,19 @@
+"""Validation for customer_allocation.py for the runsheet and k value"""
+
 import pandas as pd
-import os
 import pyodbc
+import database_connector as dc
 
-from database_connector import *
-
-SERVER = 'EAGLE-PREMIERS'
-DATABASE = 'LocalQuantumTest'
-USERNAME = 'agam'
-PASSWORD = 'agam'
-
-#connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
-connectionString = os.getenv('QuantumTestString')
-
-#Primary Function
-# runsheet is pandas dataframe
-# k is int
-# Wrapper
 def validate_inputs(runsheet, k):
+    """Primary method that verifies runsheet and k value
+
+    :param pd.DataFrame runsheet: A runsheet containing IDs and customers
+    :param int k: The person sending the message
+    """
     __validate_runsheet_format(runsheet)
     __validate_runsheet_entries(runsheet)
     total_customers = runsheet.shape[0] # total_customer = no. of rows
     __validate_k(k,total_customers)
-    print()
-
-# Format Check
-# Null Check
-# Dimension Check
-# Label Name Check
-# Unique IDs
-# Unique Customer Names, in theory, duplicates are handled?
 
 #NOTE DONE
 def __validate_runsheet_format(runsheet):
@@ -50,38 +35,36 @@ def __validate_runsheet_format(runsheet):
         raise ValueError(f'runsheet must contain exactly two columns.'
                          f'Runsheet has {runsheet.shape[1]} columns')
 
-#TODO SQL Code
+#NOTE Done
 def __validate_runsheet_entries(runsheet):
+    """Verify the runsheet has correct values.
+    runsheet cannot contain null values, have correct labels, unique IDs,
+    unique customers and each entry exists in database.
+
+    :param pd.DataFrame runsheet: A runsheet containing IDs and customers
+
+    :raises TypeError: If runsheet contains null, incorrect labels, non-unique IDs or customers
+    :raises pyodbc.DatabaseError: If row doesn't exist in database
+    """
+    if runsheet.isnull().values.any():
+        raise ValueError('runsheet cannot have null values.')
     labels = runsheet.columns.values
-    if runsheet.isnull().values.any():      # Null check
-        print("B")
-        # Raise Exception
     if not (labels[0] == "ID" and labels[1] == "Customer"):
-        print(runsheet.columns.values)
+        raise ValueError(f'Runsheet titles must be "ID" and "Customer".'
+                         f'Currently "{labels[0]}" and "{labels[1]}"')
     if not runsheet['ID'].is_unique:
-        print("E")
+        raise ValueError('runsheet contains non-unique IDs.')
     if not runsheet['Customer'].is_unique:
-        print("F")
-    #Make a function
-    dc = DatabaseConnector()
+        raise ValueError('runsheet contains non-unique Customers.')
+    conn = dc.DatabaseConnector()
     for row in runsheet.itertuples(index=False):
-        cursor = dc.create_cursor()
-        string = f'SELECT Top 1 * from Customer WHERE ID={row[0]}'
+        cursor = conn.create_cursor()
+        string = f'SELECT Top 1 * from Customer WHERE ID={row[0]}' # Select exactly one matching row
         cursor.execute(string)
         x = cursor.fetchone()
         if x is None:
-            #Raise Exception
-            print()
-        dc.close_cursor(cursor)        
-
-        #customer_id = row[0]
-        #print(customer_id)
-        
-        # SQL CODE HERE
-        # For each entry in dataframe, verify existence in db
-        # EXISTS(SELECT * from <Table> WHERE ID=<ID_variable>);
-        # If doesn't exist, raise exception
-        # Else continue loop
+            raise pyodbc.DatabaseError(f'Entry does not exist. {row}')
+        conn.close_cursor(cursor)
 
 #NOTE Done
 def __validate_k(k, total_customers):
@@ -99,4 +82,3 @@ def __validate_k(k, total_customers):
     if not 1 <= k <= total_customers:
         raise ValueError(f'k must be greater than 1 and less than total customers.'
                          f'k = {k}, total_customers = {total_customers}')
-    
