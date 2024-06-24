@@ -52,6 +52,7 @@ def __validate_runsheet_entries(runsheet):
     for row in runsheet.itertuples(index=False):
         customer_id = row[0]
         print(customer_id)
+        
         # SQL CODE HERE
         # For each entry in dataframe, verify existence in db
         # EXISTS(SELECT * from <Table> WHERE ID=<ID_variable>);

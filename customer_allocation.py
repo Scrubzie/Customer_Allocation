@@ -27,6 +27,9 @@ def main(runsheet, k):
     runsheet_dictionary()
     geographic_array()
     geographic_to_cartesian()
+    # Begin K-means
+
+def example():
     cnxn = pyodbc.connect(connectionString)
     cursor = cnxn.cursor()	
     cursor.execute("SELECT * FROM Customer") 
@@ -37,7 +40,6 @@ def main(runsheet, k):
     cursor.close()
     cnxn.close()
     # Begin K-means
-
 
 # Convert runsheet to geographic
 # Assumed valid, will have to query Db for lat, long (index,[lat, long])
