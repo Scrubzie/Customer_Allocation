@@ -1,8 +1,9 @@
+import numpy as np
 import pandas as pd
 import pyodbc
 
 from validation import validate_inputs
-from database_connector import *
+import database_connector as dc
 
 #TODO Input Validation 
 #TODO Proper Params
@@ -15,47 +16,59 @@ mydataset = {
 
 runsheet = pd.DataFrame(mydataset)
 
-SERVER = 'EAGLE-PREMIERS'
-DATABASE = 'LocalQuantumTest'
-USERNAME = 'agam'
-PASSWORD = 'agam'
-
-connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
-
-#TODO Try Catch Statement
 def main(runsheet, k):
-    validate_inputs(runsheet,k)
-    runsheet_dictionary()
-    geographic_array()
-    geographic_to_cartesian()
+    valid = False
+    try:
+        validate_inputs(runsheet,k)
+        valid = True
+    except (TypeError, ValueError, pyodbc.DatabaseError) as ex:
+        print(ex)
+    if valid:
+        geo_array = __geographic_array(runsheet)            # np.array: [[Latitude,Longitude]]
+        geo_array = geographic_to_cartesian(geo_array)      # np.array: [[x,y,z]]
+        runsheet_dictionary = __create_dictionary(runsheet) # dictionary: [ID,CustomerName]
+    else:
+        # Raise Exception?
+        print("Input was not valid")
     # Begin K-means
 
-def example():
-    cnxn = pyodbc.connect(connectionString)
-    cursor = cnxn.cursor()	
-    cursor.execute("SELECT * FROM Customer") 
-    row = cursor.fetchone() 
-    while row:
-        print (row) 
-        row = cursor.fetchone()
-    cursor.close()
-    cnxn.close()
-    # Begin K-means
-
-# Convert runsheet to geographic
+# Get geographic array
 # Assumed valid, will have to query Db for lat, long (index,[lat, long])
-def geographic_array():
-    print()
+# ProgrammingError for query
+def __geographic_array(runsheet):
+    conn = dc.DatabaseConnector()
+
+    customer_ids = tuple(runsheet.iloc[:, 0]) # Tuple of customer IDs
+    query = f'SELECT ID, latitude, longitude FROM Customer WHERE ID IN {customer_ids}'
+
+    cursor = conn.create_cursor()
+    cursor.execute(query)
+    customer_data = cursor.fetchall()
+    conn.close_cursor(cursor)
+
+    # Create dictionary based on database result        
+    customer_dict = {row[0]: (row[1], row[2]) for row in customer_data}
+
+    # Init empty array
+    array = np.zeros((runsheet.shape[0], 2))
+
+    # Fill in array, get values from dictionary
+    for counter, row in enumerate(runsheet.itertuples(index=False)):
+        customer_location = customer_dict.get(row[0])
+        if customer_location is None:
+            raise pyodbc.DatabaseError(f'Entry does not exist. {row}')
+        array[counter] = customer_location
+    return array
+
 
 # Convert geographic to cartesian
 # Simple math conversion
-def geographic_to_cartesian():
-    print()
+def geographic_to_cartesian(geo_array):
+    return("x")
 
 # Create a dictionary that will map indices to ID
 # Store it in memory
-def runsheet_dictionary():
-    print()
+def __create_dictionary(dataframe):
+    return {row[0]: row[1] for row in dataframe.values}
 
 main(runsheet,2)
-

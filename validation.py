@@ -15,7 +15,6 @@ def validate_inputs(runsheet, k):
     total_customers = runsheet.shape[0] # total_customer = no. of rows
     __validate_k(k,total_customers)
 
-#NOTE DONE
 def __validate_runsheet_format(runsheet):
     """Verify the runsheet is in the correct format.
     The format must be a Pandas DataFrame with atleast 1 row and exactly 2 columns.
@@ -35,7 +34,6 @@ def __validate_runsheet_format(runsheet):
         raise ValueError(f'runsheet must contain exactly two columns.'
                          f'Runsheet has {runsheet.shape[1]} columns')
 
-#NOTE Done
 def __validate_runsheet_entries(runsheet):
     """Verify the runsheet has correct values.
     runsheet cannot contain null values, have correct labels, unique IDs,
@@ -66,7 +64,6 @@ def __validate_runsheet_entries(runsheet):
             raise pyodbc.DatabaseError(f'Entry does not exist. {row}')
         conn.close_cursor(cursor)
 
-#NOTE Done
 def __validate_k(k, total_customers):
     """Verify that k is a valid value
 
@@ -76,7 +73,6 @@ def __validate_k(k, total_customers):
     :raises TypeError: If k is not an int
     :raises ValueError: If k is not between (and including) 1 and total_customers
     """
-    print(k, total_customers)
     if not isinstance(k, int):
         raise TypeError(f'k must be in an int. k = {type(k)}')
     if not 1 <= k <= total_customers:
