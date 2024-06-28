@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
 import pyodbc
+from sklearn.cluster import KMeans
 
 from validation import validate_inputs
 import database_connector as dc
+
 
 #TODO Input Validation 
 #TODO Proper Params
@@ -24,13 +26,14 @@ def main(runsheet, k):
     except (TypeError, ValueError, pyodbc.DatabaseError) as ex:
         print(ex)
     if valid:
-        geo_array = __geographic_array(runsheet)            # np.array: [[Latitude,Longitude]]
-        geo_array = geographic_to_cartesian(geo_array)      # np.array: [[x,y,z]]
-        runsheet_dictionary = __create_dictionary(runsheet) # dictionary: [ID,CustomerName]
+        geo_array = __geographic_array(runsheet)             # np.array: [[Latitude,Longitude]]
+        cartesian_array = geographic_to_cartesian(geo_array) # np.array: [[x,y,z]]
+        print(cartesian_array)
+        runsheet_dictionary = __create_dictionary(runsheet)  # dictionary: [ID,CustomerName]
+        __get_customer_allocation(k, cartesian_array)
     else:
         # Raise Exception?
         print("Input was not valid")
-    # Begin K-means
 
 # Get geographic array
 # Assumed valid, will have to query Db for lat, long (index,[lat, long])
@@ -64,11 +67,43 @@ def __geographic_array(runsheet):
 # Convert geographic to cartesian
 # Simple math conversion
 def geographic_to_cartesian(geo_array):
-    return("x")
+    cartesian_array = np.zeros((geo_array.shape[0],3))
+    for index, x in enumerate(geo_array):
+        cartesian_coord = get_cartesian(x[0],x[1])
+        cartesian_array[index] = cartesian_coord
+    return cartesian_array
+
+def get_cartesian(lat=None,lon=None):
+    lat, lon = np.deg2rad(lat), np.deg2rad(lon)
+    R = 6371 # radius of the earth
+    x = R * np.cos(lat) * np.cos(lon)
+    y = R * np.cos(lat) * np.sin(lon)
+    z = R *np.sin(lat)
+    return np.array((x,y,z))
 
 # Create a dictionary that will map indices to ID
 # Store it in memory
 def __create_dictionary(dataframe):
     return {row[0]: row[1] for row in dataframe.values}
 
-main(runsheet,2)
+# Do K-means++ on geo_array
+# Output: [Index,assignment]
+def __get_customer_allocation(k, geo_array):
+    #print(type(geo_array))
+    kmeans = KMeans(n_clusters=k, random_state=0, n_init="auto").fit(geo_array)
+    print(kmeans.score(geo_array)) # Lower the score the better
+
+    labels = kmeans.labels_ # This should be sufficient to 
+    print(labels) # This should be sufficient to return
+    print(type(labels))
+    
+    # Print the points assigned to each centroid
+    for cluster in range(kmeans.n_clusters):
+        print(f"Points assigned to centroid {cluster}:")
+        for i, label in enumerate(labels):
+            if label == cluster:
+                print(f"Point {i}: {geo_array[i]}")
+    return labels
+    
+
+main(runsheet,3)
