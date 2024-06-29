@@ -27,13 +27,13 @@ def __validate_runsheet_format(runsheet):
     :raises ValueError: If runsheet does not contain atleast 1 row or exactly 2 columns
     """
     if not isinstance(runsheet, pd.DataFrame):
-        raise TypeError(f'runsheet must be in a dataframe.'
+        raise TypeError(f'runsheet must be in a dataframe. '
                         f'Runsheet = {type(runsheet)}')
     if not runsheet.shape[0] > 0:
-        raise ValueError(f'runsheet must contain atleast one customer.'
+        raise ValueError(f'runsheet must contain atleast one customer. '
                          f'Runsheet has {runsheet.shape[0]} rows')
     if runsheet.shape[1] != 2:
-        raise ValueError(f'runsheet must contain exactly two columns.'
+        raise ValueError(f'runsheet must contain exactly two columns. '
                          f'Runsheet has {runsheet.shape[1]} columns')
 
 def __validate_runsheet_entries(runsheet, connection_string):
@@ -51,12 +51,12 @@ def __validate_runsheet_entries(runsheet, connection_string):
         raise ValueError('runsheet cannot have null values.')
     labels = runsheet.columns.values
     if not (labels[0] == "ID" and labels[1] == "Customer"):
-        raise ValueError(f'Runsheet titles must be "ID" and "Customer".'
+        raise ValueError(f'Runsheet titles must be "ID" and "Customer". '
                          f'Currently "{labels[0]}" and "{labels[1]}"')
     if not runsheet['ID'].is_unique:
-        raise ValueError('runsheet contains non-unique IDs.')
+        raise ValueError('runsheet contains non-unique IDs. ')
     if not runsheet['Customer'].is_unique:
-        raise ValueError('runsheet contains non-unique Customers.')
+        raise ValueError('runsheet contains non-unique Customers. ')
     conn = dc.DatabaseConnector(connection_string)
     for row in runsheet.itertuples(index=False):
         cursor = conn.create_cursor()
@@ -79,5 +79,5 @@ def __validate_k(k, total_customers):
     if not isinstance(k, int):
         raise TypeError(f'k must be in an int. k = {type(k)}')
     if not 1 <= k <= total_customers:
-        raise ValueError(f'k must be greater than 1 and less than total customers.'
+        raise ValueError(f'k must be greater than 1 and less than total customers. '
                          f'k = {k}, total_customers = {total_customers}')

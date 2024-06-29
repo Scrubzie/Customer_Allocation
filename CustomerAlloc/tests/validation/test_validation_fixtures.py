@@ -1,11 +1,10 @@
 import pytest
 import pandas as pd
-from validation import validate_inputs
 
 #Validate inputs(runsheet, k)
 
 #format check
-#- Type check
+#- Type check <>
 #- Row check
 #- Column check
 
@@ -30,22 +29,13 @@ def runsheet_valid():
     })
 
 @pytest.fixture
+def runsheet_invalid_type():
+    return "Hello"
+
+@pytest.fixture
 def testing_database():
     return "DRIVER={ODBC Driver 17 for SQL Server};SERVER=EAGLE-PREMIERS;\
         DATABASE=TestLocalQuantumTest;UID=agam;PWD=agam"
-
-@pytest.mark.parametrize("k_values", [
-    1,
-    3,
-    5
-])
-def test_valid_runsheet(runsheet_valid, k_values, testing_database):
-    try:
-        validate_inputs(runsheet_valid, k_values, testing_database)
-    except Exception as e:
-        pytest.fail(f"Function raised an unexpected exception: {e}")
-
-
 
 """import pytest
 
