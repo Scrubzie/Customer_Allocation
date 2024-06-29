@@ -6,8 +6,8 @@ import database_connector as dc
 # Get geographic array
 # Assumed valid, will have to query Db for lat, long (index,[lat, long])
 # ProgrammingError for query
-def geographic_array(runsheet):
-    conn = dc.DatabaseConnector()
+def geographic_array(runsheet, connection_string):
+    conn = dc.DatabaseConnector(connection_string)
 
     customer_ids = tuple(runsheet.iloc[:, 0]) # Tuple of customer IDs
     query = f'SELECT ID, latitude, longitude FROM Customer WHERE ID IN {customer_ids}'

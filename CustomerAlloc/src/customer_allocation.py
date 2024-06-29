@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import pyodbc
+import os
 from sklearn.cluster import KMeans
 
 from validation import validate_inputs
@@ -20,12 +21,13 @@ runsheet = pd.DataFrame(mydataset)
 def main(runsheet, k):
     valid = False
     try:
-        validate_inputs(runsheet,k)
+        connection_string = os.getenv('QuantumTestString')
+        validate_inputs(runsheet,k,connection_string)
         valid = True
     except (TypeError, ValueError, pyodbc.DatabaseError) as ex:
         print(ex)
     if valid:
-        geo_array = geographic_array(runsheet)             # np.array: [[Latitude,Longitude]]
+        geo_array = geographic_array(runsheet,connection_string)             # np.array: [[Latitude,Longitude]]
         cartesian_array = geographic_to_cartesian(geo_array) # np.array: [[x,y,z]]
         print(cartesian_array)
         runsheet_dictionary = __create_dictionary(runsheet)  # dictionary: [ID,CustomerName]

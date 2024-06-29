@@ -1,9 +1,8 @@
 import pyodbc
-import os
 
 class DatabaseConnector:
-    def __init__(self):
-        self.connection_string = os.getenv('QuantumTestString')
+    def __init__(self, connection_string):
+        self.connection_string = connection_string
         self.connection = pyodbc.connect(self.connection_string)
         self.cursors = []
     

@@ -3,15 +3,17 @@
 import pandas as pd
 import pyodbc
 import database_connector as dc
+import os
 
-def validate_inputs(runsheet, k):
+def validate_inputs(runsheet, k, connection_string):
     """Primary method that verifies runsheet and k value
 
     :param pd.DataFrame runsheet: A runsheet containing IDs and customers
     :param int k: The person sending the message
+    :param str connection_string: for the database
     """
     __validate_runsheet_format(runsheet)
-    __validate_runsheet_entries(runsheet)
+    __validate_runsheet_entries(runsheet, connection_string)
     total_customers = runsheet.shape[0] # total_customer = no. of rows
     __validate_k(k,total_customers)
 
@@ -34,12 +36,13 @@ def __validate_runsheet_format(runsheet):
         raise ValueError(f'runsheet must contain exactly two columns.'
                          f'Runsheet has {runsheet.shape[1]} columns')
 
-def __validate_runsheet_entries(runsheet):
+def __validate_runsheet_entries(runsheet, connection_string):
     """Verify the runsheet has correct values.
     runsheet cannot contain null values, have correct labels, unique IDs,
     unique customers and each entry exists in database.
 
     :param pd.DataFrame runsheet: A runsheet containing IDs and customers
+    :param str connection_string: for the database
 
     :raises TypeError: If runsheet contains null, incorrect labels, non-unique IDs or customers
     :raises pyodbc.DatabaseError: If row doesn't exist in database
@@ -54,7 +57,7 @@ def __validate_runsheet_entries(runsheet):
         raise ValueError('runsheet contains non-unique IDs.')
     if not runsheet['Customer'].is_unique:
         raise ValueError('runsheet contains non-unique Customers.')
-    conn = dc.DatabaseConnector()
+    conn = dc.DatabaseConnector(connection_string)
     for row in runsheet.itertuples(index=False):
         cursor = conn.create_cursor()
         string = f'SELECT Top 1 * from Customer WHERE ID={row[0]}' # Select exactly one matching row
