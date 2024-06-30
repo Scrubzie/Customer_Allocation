@@ -33,6 +33,22 @@ def runsheet_invalid_type():
     return "Hello"
 
 @pytest.fixture
+def runsheet_single_row():
+    mydataset = {
+        'ID': [1, 2, 3]
+    }
+    return pd.DataFrame(mydataset)
+
+@pytest.fixture
+def runsheet_three_rows():
+    mydataset = {
+        'ID': [1, 2, 3],
+        'Customer': [4, 2, 1],
+        'Name': ["Alpha", "Bravo", "Delta"]
+    }
+    return pd.DataFrame(mydataset)
+
+@pytest.fixture
 def testing_database():
     return "DRIVER={ODBC Driver 17 for SQL Server};SERVER=EAGLE-PREMIERS;\
         DATABASE=TestLocalQuantumTest;UID=agam;PWD=agam"
