@@ -27,10 +27,10 @@ def test_invalid_types(runsheet_invalid_type, testing_database):
     with pytest.raises(TypeError):  # Null Test
         validate_inputs(None, 3, testing_database)
 
-def test_row_count(runsheet_valid,testing_database):
+def test_row_count(runsheet_valid, testing_database):
     runsheet_valid = runsheet_valid.head(1) # 1 row runsheet
     try:
-        validate_inputs(runsheet_valid,1, testing_database)
+        validate_inputs(runsheet_valid, 1, testing_database)
     except Exception as e:
         pytest.fail(f"Function raised an unexpected exception: {e}")
 
@@ -38,6 +38,22 @@ def test_row_count(runsheet_valid,testing_database):
     with pytest.raises(ValueError):
         validate_inputs(df, 3, testing_database)
 
-def test_column_count():
-    print()
-    # 0,1,2,3
+def test_column_count(runsheet_valid, runsheet_single_row, runsheet_three_rows,  testing_database):
+    # 0 Column
+    df = pd.DataFrame()
+    with pytest.raises(ValueError):
+        validate_inputs(df, 1, testing_database)
+
+    # 1 Column
+    with pytest.raises(ValueError): # 1 Column
+        validate_inputs(runsheet_single_row, 1, testing_database)
+
+    # 2 Columns
+    try:
+        validate_inputs(runsheet_valid, 1, testing_database)
+    except Exception as e:
+        pytest.fail(f"Function raised an unexpected exception: {e}")
+
+    # 3 Columns
+    with pytest.raises(ValueError): # 1 Column
+        validate_inputs(runsheet_three_rows, 1, testing_database)
