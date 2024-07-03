@@ -36,6 +36,7 @@ def __validate_runsheet_format(runsheet):
         raise ValueError(f'runsheet must contain exactly two columns. '
                          f'Runsheet has {runsheet.shape[1]} columns')
 
+#TODO Validate that the customer corresponds to ID
 def __validate_runsheet_entries(runsheet, connection_string):
     """Verify the runsheet has correct values.
     runsheet cannot contain null values, have correct labels, unique IDs,
@@ -60,11 +61,14 @@ def __validate_runsheet_entries(runsheet, connection_string):
     conn = dc.DatabaseConnector(connection_string)
     for row in runsheet.itertuples(index=False):
         cursor = conn.create_cursor()
-        string = f'SELECT Top 1 * from Customer WHERE ID={row[0]}' # Select exactly one matching row
+        string = f'SELECT Top 1 customerName from Customer WHERE ID={row[0]}' # Select exactly one matching row
         cursor.execute(string)
         x = cursor.fetchone()
         if x is None:
             raise pyodbc.DatabaseError(f'Entry does not exist. {row}')
+        else:
+            if row[1] != x[0]:
+                raise ValueError(f'Entry exists but does not match runsheet. {row[1]} and {x[0]}') #TODO Update function string
         conn.close_cursor(cursor)
 
 def __validate_k(k, total_customers):
