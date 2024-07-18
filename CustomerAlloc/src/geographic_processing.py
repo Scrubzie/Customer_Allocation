@@ -10,9 +10,14 @@ def geographic_array(runsheet, connection_string):
     conn = dc.DatabaseConnector(connection_string)
 
     customer_ids = tuple(runsheet.iloc[:, 0]) # Tuple of customer IDs
+
+    if len(customer_ids) == 1:
+        customer_ids = f"({customer_ids[0]})"
+
     query = f'SELECT ID, latitude, longitude FROM Customer WHERE ID IN {customer_ids}'
 
     cursor = conn.create_cursor()
+    #print(query)
     cursor.execute(query)
     customer_data = cursor.fetchall()
     conn.close_cursor(cursor)

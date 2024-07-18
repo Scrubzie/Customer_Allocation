@@ -59,7 +59,7 @@ def __validate_runsheet_entries(runsheet, connection_string):
     if not runsheet['Customer'].is_unique:
         raise ValueError('runsheet contains non-unique Customers. ')
     conn = dc.DatabaseConnector(connection_string)
-    for row in runsheet.itertuples(index=False):
+    for row in runsheet.itertuples(index=False): # This should be a seperate function, not technically validation
         cursor = conn.create_cursor()
         string = f'SELECT Top 1 customerName from Customer WHERE ID={row[0]}' # Select exactly one matching row
         cursor.execute(string)
