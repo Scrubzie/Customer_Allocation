@@ -1,14 +1,30 @@
 from customer_allocation import get_customer_allocation, create_dictionary
 from route_partitioning import *
-from route_solver import *
+from geographic_processing import geographic_array
+from distance_matrix.distance_matrix_context import DistanceMatrixContext
 import pandas as pd
+
+from distance_matrix.spatial_matrix import SpatialMatrix
+from route_solver.route_solver_context import RouteSolverContext
+from route_solver.brute_force_solver import BruteForceSolver
+
 
 dataset = {
   'ID': [11, 12, 13, 14, 15, 16],
   'Customer': ["Woolworths Riverton", "Coles Karawara", "Spud Shed Jandakot", "Spud Shed Bentley", "Woolworths Innaloo", "Spud Shed Innaloo"]
 }
 
+testdataset = {
+  'ID': [11, 12, 16, 14, 15, 13]
+}
+
+id_list = [11, 12, 16, 14, 15, 13]
+df = pd.DataFrame({'ID': id_list})
+
+
+testdataset = pd.DataFrame(testdataset)
 runsheet = pd.DataFrame(dataset)
+
 
 k = 3
 
@@ -17,11 +33,23 @@ if __name__=="__main__":
     runsheet_dictionary = create_dictionary(runsheet)
     print(allocation_array)
     tree = None
-    tree = partition_routes2(allocation_array, 1, runsheet_dictionary)
+    tree = partition_routes2(allocation_array, 2, runsheet_dictionary)
     print(allocation_array)
     print(tree)
-    print(tree.post_order_dfs())
-    tree.solve_tree()
+    connection_string = os.getenv('QuantumTestString')
+    print(geographic_array(df,connection_string))
+
+    #WORKS
+    context = DistanceMatrixContext(SpatialMatrix())
+    context.build_leaf_matrix(tree)
+    context.build_parent_matrix(tree)
+
+    dm = DistanceMatrixContext(SpatialMatrix())
+    rs = RouteSolverContext(BruteForceSolver())
+    tree.post_order_dfs2(dm, rs)
+
+
+    #tree.solve_tree()
     #print(runsheet_dictionary)
 
     

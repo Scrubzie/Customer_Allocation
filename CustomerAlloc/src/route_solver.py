@@ -6,5 +6,6 @@ def r_solver(tree):
 # Get tree
 #   Post order traversal
 #       Call cluster solver (make distance matrix, solve)
+#       
 #       Gets approx optimal route
 #   

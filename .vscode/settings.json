@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./CustomerAlloc/src"
-    ]
+        "F:/Programming/Capstone/Customer_Allocation/CustomerAlloc/src"
+    ],
+    "python.linting.pylintEnabled": true
 }

@@ -38,7 +38,6 @@ def partition_routes2(allocation_array, split_threshold, runsheet_dictionary):
     print("FINAL c ", copy)
     print("FINAL aa", allocation_array)
     print("Runsheet Dictionary", runsheet_dictionary)
-    print(tree)
     return tree
 
 

@@ -1,4 +1,6 @@
-from cluster_tree_solver import *
+from cluster_tree_solver import solve_tree, brute_force_solve
+from distance_matrix.distance_matrix import DistanceMatrix
+from route_solver.route_solver import RouteSolver
 
 class TreeNode:
     def __init__(self, cluster_id, customers=None, route=None):
@@ -45,7 +47,16 @@ class TreeNode:
     def _post_order_dfs_helper(self, node, result):
         for child in node.children:
             self._post_order_dfs_helper(child, result)
+        print(node.id)
         result.append(node.id)
+
+    def post_order_dfs2(self, distance_matrix, route_solver): #Feed in a DistanceMatrix, RouteSolver
+        self._post_order_dfs_helper2(self, distance_matrix, route_solver)
+
+    def _post_order_dfs_helper2(self, node, distance_matrix, route_solver):
+        for child in node.children:
+            self._post_order_dfs_helper2(child, distance_matrix, route_solver)
+        node.solve_node(distance_matrix, route_solver)
 
     def __repr__(self, level=0):
         ret = "\t" * level + repr(self.id) + ": " + repr(self.customers) + "\n"
@@ -67,25 +78,30 @@ class TreeNode:
         for child in node.children:
             self._find_node_by_id_helper(child, target_id, result)
 
-    def solve_tree(self):
-        solve_tree(self)
+    # DEPRECATED
+    #def solve_tree(self):
+    #    brute_force_solve(self)
 
-    
-    # Setters and getters
-    # CRUD (Find is part of Read)
-
-"""root = TreeNode("root", 0)
-child1 = TreeNode("child1", 1)
-child2 = TreeNode("child2", 2)
-child3 = TreeNode("child3", 3)
-child4 = TreeNode("child4", 4)
-
-root.add_child(child1)
-root.add_child(child2)
-child1.add_child(child3)
-child1.add_child(child4)
-
-print(root)
-
-post_order_result = root.post_order_dfs()
-print(f"Post-order DFS: {post_order_result}")"""
+    def solve_node(self, distance_matrix: DistanceMatrix, route_solver: RouteSolver):
+        if self.children == []:
+            print(self)
+            x = distance_matrix.build_leaf_matrix(self)
+            print("DONE")
+            y = route_solver.solve(x)
+            print("x", x)
+            print("y", y)
+            #Solve Leaf
+        else:
+            print("Parent")
+            #Solve Parent
+        
+        
+        
+        
+        # The post-order stuff
+        # on "result.append(node.id)", call solve
+        # solve needs to:
+            # Get distance matrix (Leaf is diff from parents)
+            # Find shortest path
+            # chuck in that optimal path in the node's route
+            # chuck in that corresponding cost

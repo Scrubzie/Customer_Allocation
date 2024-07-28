@@ -30,10 +30,12 @@ def geographic_array(runsheet, connection_string):
 
     # Fill in array, get values from dictionary
     for counter, row in enumerate(runsheet.itertuples(index=False)):
+        #print("row[0]", row[0])
         customer_location = customer_dict.get(row[0])
         if customer_location is None:
             raise pyodbc.DatabaseError(f'Entry does not exist. {row}')
         array[counter] = customer_location
+    #print("THING", array, runsheet)
     return array
 
 
